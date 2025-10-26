@@ -9,9 +9,16 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 ## 🚀 主な機能
 
 - 🎬 **YouTube動画対応**: URLを入力するだけで動画から文字起こし
-- 📂 **プレイリスト対応**: YouTubeプレイリスト全体を一括処理
-- 🎯 **複数モデル対応**: Whisperの各種モデル（tiny, base, small, medium, large, large-v3-turbo）から選択可能
+- 📂 **プレイリスト対応**: YouTubeプレイリスト全体を一括処理（一部ノートブック）
+- 🎯 **複数モデル対応**: Whisperの各種モデルから選択可能
+  - **最適化モデル**: `Zoont/faster-whisper-large-v3-turbo-int8-ct2` (推奨)
+  - **高速モデル**: `deepdml/faster-whisper-large-v3-turbo-ct2`
+  - **標準モデル**: `large-v3`, `large-v2`, `distil-large-v3`, `medium`, `small`, `base`, `tiny`
 - ⚡ **量子化オプション**: メモリ使用量を抑えた高速処理
+  - `int8_float16` (推奨・高速)
+  - `float16` (標準)
+  - `int8` (省メモリ)
+  - `float32` (高精度)
 - 📁 **動画ファイル自動対応**: ローカルファイルのアップロードにも対応
 - 🌐 **多言語対応**: 日本語をはじめ、多言語の文字起こしに対応
 
