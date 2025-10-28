@@ -732,15 +732,6 @@ beam_size = 3
 use_vad_filter = False  # VAD無効で高速化
 ```
 
-#### 精度を最大化
-```python
-model_name = "large-v3"
-compute_type = "float16"
-beam_size = 10
-use_vad_filter = True
-vad_min_silence_duration_ms = 100
-```
-
 ---
 
 ### 🔍 デバッグ方法
