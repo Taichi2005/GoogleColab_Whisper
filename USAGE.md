@@ -315,16 +315,7 @@ drive_transcript_output_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/
 # beam_size = 5
 ```
 
-**例2: 最高精度設定（時間がかかる）**
-```python
-model_name = "large-v3"  # 最高精度モデル
-compute_type = "float16"  # 高精度計算タイプ
-beam_size = 10  # 最大ビームサイズ
-use_vad_filter = True
-vad_min_silence_duration_ms = 100  # 最も細かい無音検出
-```
-
-**例3: 最速処理設定**
+**例2: 最速処理設定**
 ```python
 model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
 compute_type = "int8_float16"
@@ -332,7 +323,7 @@ beam_size = 3  # 最小ビームサイズ
 use_vad_filter = False  # VAD無効で高速化
 ```
 
-**例4: 動画ファイル大量処理＋Gemini要約**
+**例3: 動画ファイル大量処理＋Gemini要約**
 ```python
 # input_audioフォルダに複数の動画ファイルを配置
 model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
@@ -371,9 +362,7 @@ gemini_prompt = "以下の会議録から、決定事項とアクションアイ
 | 用途 | モデル | 計算タイプ | beam_size | 理由 |
 |------|--------|-----------|-----------|------|
 | **総合推奨** | `Zoont/faster-whisper-large-v3-turbo-int8-ct2` | `int8_float16` | 5 | 速度・精度・メモリの最適バランス |
-| **最高精度** | `large-v3` | `float16` | 10 | OpenAI公式最新モデル |
 | **高速処理** | `Zoont/faster-whisper-large-v3-turbo-int8-ct2` | `int8_float16` | 3 | 量子化による高速化 |
-| **日本語特化** | `large-v3` | `float16` | 7～10 | 日本語精度が最高 |
 | **長時間動画** | `Zoont/faster-whisper-large-v3-turbo-int8-ct2` | `int8_float16` | 5 | メモリ効率が良い |
 
 ---
@@ -410,11 +399,6 @@ gemini_prompt = "以下の会議録から、決定事項とアクションアイ
 - 10分の動画: 約2～3分
 - 30分の動画: 約6～9分
 - 1時間の動画: 約12～18分
-
-**高精度設定**（large-v3 + float16 + beam_size=10）
-- 10分の動画: 約5～7分
-- 30分の動画: 約15～21分
-- 1時間の動画: 約30～42分
 
 ※ GPU使用状況、音声の複雑さによって変動します
 
@@ -792,4 +776,4 @@ print("✅ モデルロード成功")
 
 ---
 
-**最終更新**: 2025年1月
+**最終更新**: 2025年10月
