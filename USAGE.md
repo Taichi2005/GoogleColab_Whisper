@@ -69,7 +69,7 @@
 - ✅ Gemini AIによる自動要約・分析（オプション）
 - ✅ VADによる無音区間除去で精度向上
 - ✅ 処理後の自動クリーンアップ
-- ✅ Google Drive必須（結果の永続保存）
+- ✅ Google Drive推奨（結果の永続保存、デフォルト設定で使用）
 
 ---
 
@@ -91,15 +91,16 @@
 
 ---
 
-**セル2: Google Driveへの接続（必須）**
+**セル2: Google Driveへの接続（推奨）**
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 
 **注意**: 
-- このノートブックではGoogle Drive接続は**必須**です
-- 結果はGoogle Driveに保存されます
+- デフォルト設定ではGoogle Drive内のパスを使用します
+- Google Driveに結果を保存したい場合は、このセルを実行してください
+- ローカルパス（`/content/`）に変更すれば、Google Drive接続は不要です
 - 認証が必要です（初回のみ）
 
 **Google Driveフォルダの準備**:
@@ -126,8 +127,8 @@ video_url = "https://www.youtube.com/playlist?list=xxxxx"  # プレイリストU
 output_transcript_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
 
 # 2. モデルとパフォーマンス設定
-model_name = "deepdml/faster-whisper-large-v3-turbo-ct2"  # デフォルト
-compute_type = "float32"  # デフォルト
+model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"  # デフォルト（推奨）
+compute_type = "int8_float16"  # デフォルト（推奨）
 
 # 3. VAD (音声区間検出) 設定
 use_vad_filter = True  # 無音除去を有効化
@@ -138,7 +139,7 @@ enable_language_specification = False  # 自動検出
 language_code = "ja"  # 日本語指定する場合
 
 # 5. 高度な設定
-beam_size = 7  # 精度と速度のバランス（1～10）
+beam_size = 5  # バランス重視（デフォルト）
 cleanup_audio_file = True  # 処理後に音声ファイル削除
 
 # 6. Geminiによる処理の設定（オプション）
@@ -159,9 +160,9 @@ video_url = "https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxxx"
 output_transcript_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"
 
 # デフォルト設定で実行
-# model_name = "deepdml/faster-whisper-large-v3-turbo-ct2"
-# compute_type = "float32"
-# beam_size = 7
+# model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
+# compute_type = "int8_float16"
+# beam_size = 5
 ```
 
 **例2: 単体動画URL（基本設定）**
@@ -399,8 +400,8 @@ gemini_prompt = "以下の会議録から、決定事項とアクションアイ
 | beam_size | 速度 | 精度 | 推奨用途 |
 |-----------|------|------|----------|
 | 1～3 | ⭐⭐⭐⭐⭐ | ⭐⭐ | 超高速処理が必要な場合 |
-| 5 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | **推奨バランス値** |
-| 7 | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 精度重視（YouTube版デフォルト） |
+| 5 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | **推奨バランス値（デフォルト）** |
+| 7 | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 精度重視 |
 | 10 | ⭐⭐ | ⭐⭐⭐⭐⭐ | 最高精度、処理時間長い |
 
 💡 **推奨設定**: 通常は`5`、精度重視なら`7～10`、速度重視なら`3`

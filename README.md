@@ -37,7 +37,8 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 - 🎬 **YouTubeプレイリスト一括処理対応**: プレイリストURLを入力するだけで、全動画を自動処理
 - 🎥 **単体動画URLにも対応**: 1本の動画URLでも使用可能
 - 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
-- 💾 **Google Drive必須**: 処理結果はGoogle Driveに自動保存
+- 💾 **Google Drive推奨**: 処理結果はGoogle Driveに自動保存（デフォルト）
+  ※ ローカルパス（`/content/`）に変更すれば、Google Drive不要
 - 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
   - 対応モデル: `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`
   - カスタムプロンプトで柔軟な処理が可能
@@ -60,10 +61,10 @@ output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'
 ```
 
 **デフォルト設定:**
-- モデル: `deepdml/faster-whisper-large-v3-turbo-ct2`
-- 計算タイプ: `float32`
+- モデル: `Zoont/faster-whisper-large-v3-turbo-int8-ct2`
+- 計算タイプ: `int8_float16`
 - VAD: 有効（200ms閾値）
-- beam_size: 7
+- beam_size: 5
 
 ---
 
@@ -123,7 +124,8 @@ My Drive/
 
 **主な特徴:**
 - 🎬 **YouTube単体動画URL専用**: 1本の動画URLから文字起こし
-- 💾 **Google Drive必須**: 処理結果はGoogle Driveに自動保存
+- 💾 **Google Drive推奨**: 処理結果はGoogle Driveに自動保存（デフォルト）
+  ※ ローカルパスに変更可能
 - 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
 - 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
 - 🎯 **VAD（音声区間検出）機能**: 無音区間を自動除去
@@ -165,7 +167,8 @@ output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'
 
 2. **セルを上から順に実行**
    - **セル1: 環境構築** - yt-dlp、faster-whisper、ffmpeg、Gemini APIをインストール
-   - **セル2: Google Driveへの接続（必須）** - 結果をDriveに保存（必須）
+   - **セル2: Google Driveへの接続（推奨）** - 結果をDriveに保存したい場合
+     ※ デフォルト設定ではGoogle Drive内に保存されます
    - **セル3: プレイリスト/単体動画URLから高精度文字起こし＆Gemini処理実行** - 設定と実行
 
 3. **Google Driveフォルダの準備**
@@ -185,8 +188,8 @@ video_url = "https://www.youtube.com/playlist?list=xxxxx"  # プレイリストU
 output_transcript_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
 
 # 2. モデルとパフォーマンス設定
-model_name = "deepdml/faster-whisper-large-v3-turbo-ct2"  # 高速モデル
-compute_type = "float32"  # 計算タイプ
+model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"  # 推奨モデル（最速）
+compute_type = "int8_float16"  # 推奨計算タイプ
 
 # 3. VAD (音声区間検出) 設定
 use_vad_filter = True  # VADを有効化
@@ -197,7 +200,7 @@ enable_language_specification = False  # 自動検出
 language_code = "ja"  # 日本語を指定する場合
 
 # 5. 高度な設定
-beam_size = 7  # 精度と速度のバランス（1～10）
+beam_size = 5  # バランス重視（デフォルト）
 cleanup_audio_file = True  # 処理後に音声ファイルを削除
 
 # 6. Geminiによる処理の設定（オプション）
@@ -325,8 +328,8 @@ beam_size = 5
 
 **パターン2: 高精度重視**
 ```python
-model_name = "deepdml/faster-whisper-large-v3-turbo-ct2"
-compute_type = "float16"
+model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
+compute_type = "int8_float16"
 beam_size = 7～10
 ```
 
@@ -334,7 +337,7 @@ beam_size = 7～10
 ```python
 model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
 compute_type = "int8_float16"
-beam_size = 3～5
+beam_size = 3
 ```
 
 ### 🤖 Gemini AI統合の活用方法
