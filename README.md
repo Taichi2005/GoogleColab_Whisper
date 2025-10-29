@@ -30,12 +30,14 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 ### ✨ 推奨ノートブック（最新・完成版）
 
-#### 1. [`【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb) ⭐
-**YouTube動画URL専用の完全自動化ノートブック**
+#### 1. [`【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb) ⭐⭐
+**YouTubeプレイリスト＆単体動画URL対応の最新完全自動化ノートブック**
 
 **主な特徴:**
-- 🎬 **YouTube動画URL入力だけで完結**: URLを入力するだけで、ダウンロードから文字起こしまで全自動
+- 🎬 **YouTubeプレイリスト一括処理対応**: プレイリストURLを入力するだけで、全動画を自動処理
+- 🎥 **単体動画URLにも対応**: 1本の動画URLでも使用可能
 - 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
+- 💾 **Google Drive必須**: 処理結果はGoogle Driveに自動保存
 - 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
   - 対応モデル: `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`
   - カスタムプロンプトで柔軟な処理が可能
@@ -48,7 +50,14 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
   - 計算タイプ（int8_float16/float16/int8/float32）選択
 - 💡 **初心者に最適**: 3つのセルを順に実行するだけの簡単操作
 
-**推奨用途:** YouTube動画の文字起こしをしたい方、URLだけで手軽に処理したい方、Gemini AIで要約も同時に行いたい方
+**推奨用途:** YouTubeプレイリストの全動画を一括処理したい方、複数の動画を効率的に文字起こししたい方、Gemini AIで要約も同時に行いたい方
+
+**Google Drive設定例:**
+```python
+# Google Driveのフォルダパス設定（必須）
+output_transcript_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
+output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
+```
 
 **デフォルト設定:**
 - モデル: `deepdml/faster-whisper-large-v3-turbo-ct2`
@@ -63,6 +72,7 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 **主な特徴:**
 - 📁 **Google Drive内のファイル一括処理**: 指定フォルダ内の全ての動画・音声ファイルを自動処理
+- 💾 **Google Drive必須**: 入力ファイルはGoogle Driveに配置が必要
 - 🎬 **動画ファイル自動対応**: mp4, mov, avi, wmv, mkv, flv, webmなど動画から自動で音声抽出
   - FFmpegで16kHz/モノラルに最適化して音声抽出
   - 動画ファイル検出時は自動的に音声抽出モードに切り替え
@@ -80,6 +90,24 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 **推奨用途:** 既にダウンロード済みの動画・音声ファイルを大量に処理したい方、最大限のカスタマイズをしたい方、動画ファイルから直接文字起こししたい方
 
+**Google Drive設定例:**
+```python
+# Google Driveのフォルダパス設定（必須）
+# 事前にGoogle Drive上に以下のフォルダ構造を作成してください
+drive_audio_input_dir = '/content/drive/My Drive/Whisper_Transcripts/input_audio'  #@param {type:"string"}
+drive_transcript_output_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
+drive_gemini_output_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
+```
+
+**フォルダ構造:**
+```
+My Drive/
+└── Whisper_Transcripts/
+    ├── input_audio/          ← ここに動画・音声ファイルを配置
+    ├── output_transcripts/   ← 文字起こし結果が保存される
+    └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
+```
+
 **デフォルト設定:**
 - モデル: `Zoont/faster-whisper-large-v3-turbo-int8-ct2`（推奨）
 - 計算タイプ: `int8_float16`（最速）
@@ -88,9 +116,33 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 ---
 
+### 📦 安定版ノートブック
+
+#### 3. [`【安定版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【安定版】動画URLから高精度文字起こし実行スクリプト.ipynb)
+**YouTube単体動画URL専用の安定版ノートブック**
+
+**主な特徴:**
+- 🎬 **YouTube単体動画URL専用**: 1本の動画URLから文字起こし
+- 💾 **Google Drive必須**: 処理結果はGoogle Driveに自動保存
+- 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
+- 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
+- 🎯 **VAD（音声区間検出）機能**: 無音区間を自動除去
+- 💡 **シンプルで安定**: プレイリスト機能を含まない安定した動作
+
+**推奨用途:** 1本ずつ確実に処理したい方、安定性を最優先したい方
+
+**Google Drive設定例:**
+```python
+# Google Driveのフォルダパス設定（必須）
+output_transcript_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
+output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
+```
+
+---
+
 ### 📦 旧版ノートブック（参考用）
 
-以下のノートブックは旧版または機能が限定されたバージョンです。基本的には上記の推奨版（完成版）をご利用ください。
+以下のノートブックは旧版または機能が限定されたバージョンです。基本的には上記の推奨版・安定版をご利用ください。
 
 - [`【旧版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【旧版】動画URLから高精度文字起こし実行スクリプト.ipynb): 完成版のベースとなった旧バージョン（Gemini機能なし）
 - [`【旧版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【旧版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb): 完成版のベースとなった旧バージョン（Gemini機能なし）
@@ -104,8 +156,8 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 ### クイックスタート
 
-#### 🎬 YouTube動画から文字起こしする場合
-**→ [`【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb)を使用**
+#### 🎬 YouTubeプレイリスト・動画から文字起こしする場合
+**→ [`【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb)を使用（推奨）**
 
 1. **ランタイムの設定**
    - Google Colabでノートブックを開く
@@ -113,14 +165,24 @@ Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こ�
 
 2. **セルを上から順に実行**
    - **セル1: 環境構築** - yt-dlp、faster-whisper、ffmpeg、Gemini APIをインストール
-   - **セル2: Google Driveへの接続（オプション）** - 結果をDriveに保存したい場合のみ実行
-   - **セル3: URLから高精度文字起こし＆Gemini処理実行** - 設定と実行
+   - **セル2: Google Driveへの接続（必須）** - 結果をDriveに保存（必須）
+   - **セル3: プレイリスト/単体動画URLから高精度文字起こし＆Gemini処理実行** - 設定と実行
 
-3. **パラメータ設定例**
+3. **Google Driveフォルダの準備**
+   - Google Driveで以下のフォルダを作成してください：
+   ```
+   My Drive/
+   └── Whisper_Transcripts/
+       ├── output_transcripts/   ← 文字起こし結果が保存される
+       └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
+   ```
+
+4. **パラメータ設定例**
 ```python
-# 1. 動画のURLと出力先の設定
-video_url = "https://youtu.be/xxxxx"
-output_transcript_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/output_transcripts"
+# 1. 動画/プレイリストのURLと出力先の設定（Google Drive必須）
+video_url = "https://www.youtube.com/playlist?list=xxxxx"  # プレイリストURL
+# または単体動画URL: video_url = "https://youtu.be/xxxxx"
+output_transcript_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
 
 # 2. モデルとパフォーマンス設定
 model_name = "deepdml/faster-whisper-large-v3-turbo-ct2"  # 高速モデル
@@ -142,7 +204,7 @@ cleanup_audio_file = True  # 処理後に音声ファイルを削除
 enable_gemini_processing = False  # Gemini機能を使う場合はTrue
 gemini_api_key = ""  # GeminiのAPIキー
 gemini_model = "gemini-2.5-flash"  # 使用するGeminiモデル
-output_gemini_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/gemini_outputs"
+output_gemini_dir = "/content/drive/My Drive/Whisper_Transcripts/gemini_outputs"  #@param {type:"string"}
 gemini_prompt = "以下の動画書き起こしテキストを、重要なポイントと動画の構成を含めて要約して最大コンテクストで出力してください。"
 ```
 
@@ -164,11 +226,21 @@ gemini_prompt = "以下の動画書き起こしテキストを、重要なポイ
    - **セル2: Google Driveへの接続（必須）** - Google Driveをマウント
    - **セル3: 高性能文字起こし＆Gemini処理実行** - 設定と実行
 
-3. **パラメータ設定例**
+3. **Google Driveフォルダの準備**
+   - Google Driveで以下のフォルダ構造を事前に作成してください：
+   ```
+   My Drive/
+   └── Whisper_Transcripts/
+       ├── input_audio/          ← ここに動画・音声ファイルを配置
+       ├── output_transcripts/   ← 文字起こし結果が保存される
+       └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
+   ```
+
+4. **パラメータ設定例**
 ```python
-# 1. Google Driveのパス設定
-drive_audio_input_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/input_audio"
-drive_transcript_output_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/output_transcripts"
+# 1. Google Driveのパス設定（必須）
+drive_audio_input_dir = "/content/drive/My Drive/Whisper_Transcripts/input_audio"  #@param {type:"string"}
+drive_transcript_output_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
 
 # 2. モデルとパフォーマンス設定
 model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"  # 推奨モデル（最速）
@@ -189,16 +261,16 @@ beam_size = 5  # バランスの取れた推奨値（1～10）
 enable_gemini_processing = False  # Gemini機能を使う場合はTrue
 gemini_api_key = ""  # GeminiのAPIキー
 gemini_model = "gemini-2.5-flash"  # 使用するGeminiモデル
-drive_gemini_output_dir = "/content/drive/MyDrive/Colab/Whisper_Transcripts/gemini_outputs"
+drive_gemini_output_dir = "/content/drive/My Drive/Whisper_Transcripts/gemini_outputs"  #@param {type:"string"}
 gemini_prompt = "以下の会議や講義、対話の書き起こしテキストを、重要なポイントや構成をまとめて要約して最大コンテクストで出力してください。"
 ```
 
-4. **ファイルの準備**
+5. **ファイルの準備**
    - `input_audio`フォルダに動画・音声ファイルを配置
    - 対応形式: **動画** (mp4, mov, avi, wmv, mkv, flv, webm) / **音声** (wav, mp3など)
    - 動画ファイルの場合、FFmpegが自動的に音声を抽出します
 
-5. **実行完了後**
+6. **実行完了後**
    - `output_transcripts`フォルダに文字起こし結果が保存されます
    - Gemini処理を有効にした場合、`gemini_outputs`フォルダに要約結果が保存されます
    - 複数ファイルがある場合、すべて自動的に処理されます
@@ -351,7 +423,8 @@ gemini_prompt = "以下の英語の書き起こしを日本語で要約し、重
 
 ### Q7: 複数の動画を一度に処理できますか？
 **A:** 
-- **YouTube版**: 現在は1本ずつ処理（将来的にプレイリスト対応予定）
+- **YouTubeプレイリスト版（完成版）**: プレイリストURLで全動画を一括自動処理可能
+- **YouTube単体動画版（安定版）**: 1本ずつ処理
 - **ローカルファイル版**: input_audioフォルダ内の全ファイルを自動的に一括処理
 
 ### Q8: 対応言語は？
@@ -368,7 +441,7 @@ gemini_prompt = "以下の英語の書き起こしを日本語で要約し、重
 
 ## 🚀 今後の予定
 
-- [ ] プレイリスト一括処理機能の追加（YouTube版）
+- [x] ~~プレイリスト一括処理機能の追加（YouTube版）~~ ✅ 完成版で実装済み
 - [ ] 字幕ファイル（SRT/VTT）出力対応
 - [ ] タイムスタンプ付き文字起こし
 - [ ] 話者分離機能（diarization）
@@ -400,4 +473,4 @@ gemini_prompt = "以下の英語の書き起こしを日本語で要約し、重
 
 ---
 
-**最終更新**: 2025年1月
+**最終更新**: 2025年10月（プレイリスト対応完成版リリース）
