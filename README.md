@@ -1,478 +1,613 @@
 # 🎤 GoogleColab_Whisper
 
-Google Colab上でOpenAIのWhisperを使用した高精度な音声文字起こしを実行するためのノートブックコレクション
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Taichi2005/GoogleColab_Whisper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Stars](https://img.shields.io/github/stars/Taichi2005/GoogleColab_Whisper?style=social)](https://github.com/Taichi2005/GoogleColab_Whisper)
+
+Google Colab上でOpenAI Whisperを使用した**高精度な音声文字起こし**を実現するためのノートブックコレクション。  
+YouTube動画やローカルファイルから、無料のGPUを活用して簡単に文字起こしを実行できます。
+
+---
+
+## 📋 目次
+
+- [概要](#-概要)
+- [主な機能](#-主な機能)
+- [利用可能なノートブック](#-利用可能なノートブック)
+- [クイックスタート](#-クイックスタート)
+- [技術仕様](#-技術仕様)
+- [モデル選択ガイド](#-モデル選択ガイド)
+- [詳細設定ガイド](#-詳細設定ガイド)
+- [システム要件](#️-システム要件)
+- [トラブルシューティング](#-トラブルシューティング)
+- [ライセンス](#-ライセンス)
+- [貢献](#-貢献)
+
+---
 
 ## 📝 概要
 
-このリポジトリには、動画・音声ファイルから高精度な文字起こしを行うための、複数の機能を持つJupyter Notebookが含まれています。Google Colabの無料GPUを活用し、YouTubeの動画URLやローカルファイルから簡単に文字起こしができます。
+このリポジトリは、OpenAI Whisperを利用した文字起こしタスクを、Google Colabの無料GPUで簡単に実行できるように設計されています。  
+複数のノートブックが用意されており、YouTube動画のURL指定からローカルファイルの一括処理まで、様々なユースケースに対応しています。
+
+### なぜこのツールを使うのか？
+
+- ✅ **無料で高精度**: Google ColabのT4 GPUを無料で活用
+- ✅ **簡単セットアップ**: コードのコピー＆ペーストで即実行
+- ✅ **柔軟な入力形式**: YouTube URL、プレイリスト、ローカルファイル対応
+- ✅ **AI統合**: Gemini APIによる自動要約・分析機能搭載
+- ✅ **高速処理**: 最適化モデルで従来比2-3倍の速度向上
+- ✅ **日本語対応**: 日本語音声の高精度認識
+
+---
 
 ## 🚀 主な機能
 
-- 🎬 **YouTube動画対応**: URLを入力するだけで動画から文字起こし
-- 📂 **ローカルファイル一括処理**: Google Drive内の複数ファイルを自動処理
-- 🤖 **Gemini AI統合**: 文字起こし結果をGemini APIで要約・分析（オプション）
-- 🎯 **複数モデル対応**: Whisperの各種モデルから選択可能
-  - **最適化モデル**: `Zoont/faster-whisper-large-v3-turbo-int8-ct2` (推奨・最速)
-  - **高速モデル**: `deepdml/faster-whisper-large-v3-turbo-ct2`
-  - **標準モデル**: `large-v3`, `large-v2`, `distil-large-v3`, `medium`, `small`, `base`, `tiny`
-- ⚡ **量子化オプション**: メモリ使用量を抑えた高速処理
-  - `int8_float16` (推奨・高速)
-  - `float16` (標準)
-  - `int8` (省メモリ)
-  - `float32` (高精度)
-- 🎥 **動画ファイル自動対応**: mp4, mov, avi, mkv, webmなどから自動で音声抽出
-- 🎵 **音声ファイル直接対応**: wav, mp3などの音声ファイルもそのまま処理
-- 🌐 **多言語対応**: 日本語をはじめ、多言語の文字起こしに対応
-- 🎛️ **VAD（音声区間検出）**: 無音区間を自動除去して精度向上
-- 🔧 **詳細パラメータ調整**: beam_size、VAD設定など細かく調整可能
+### コア機能
 
-## 📚 ノートブック一覧
+| 機能 | 説明 |
+|------|------|
+| 🎬 **YouTube動画対応** | URLを入力するだけで動画から文字起こし。プレイリスト一括処理にも対応 |
+| 📂 **ローカルファイル一括処理** | Google Drive内の複数ファイル（音声・動画）を自動処理 |
+| 🤖 **Gemini AI統合** | 文字起こし結果をGemini APIで要約・分析（9種類のモデルから選択） |
+| 🎯 **複数モデル対応** | 用途に応じて最適なWhisperモデルを選択可能（10種類以上） |
+| ⚡ **VAD（音声区間検出）** | 無音区間を自動除去して精度向上 |
+| 🌐 **多言語対応** | 100以上の言語をサポート（自動検出または手動指定） |
+| 📊 **詳細ログ出力** | タイムスタンプ付き処理ログで進捗を確認 |
 
-### ✨ 推奨ノートブック（最新・完成版）
+### サポートされる入力形式
 
-#### 1. [`【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb) ⭐⭐
-**YouTubeプレイリスト＆単体動画URL対応の最新完全自動化ノートブック**
-
-**主な特徴:**
-- 🎬 **YouTubeプレイリスト一括処理対応**: プレイリストURLを入力するだけで、全動画を自動処理
-- 🎥 **単体動画URLにも対応**: 1本の動画URLでも使用可能
-- 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
-- 💾 **Google Drive推奨**: 処理結果はGoogle Driveに自動保存（デフォルト）
-  ※ ローカルパス（`/content/`）に変更すれば、Google Drive不要
-- 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
-  - 対応モデル: `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`
-  - カスタムプロンプトで柔軟な処理が可能
-- 🎯 **VAD（音声区間検出）機能**: 無音区間を自動除去し、精度向上
-  - 無音閾値をミリ秒単位で調整可能（100ms～2000ms）
-- 🧹 **自動クリーンアップ**: 処理完了後に一時ファイルを自動削除（オプション）
-- ⚙️ **詳細設定可能**: 
-  - beam_size調整（1～10）で精度と速度のバランスを最適化
-  - 言語コード指定で特定言語に最適化
-  - 計算タイプ（int8_float16/float16/int8/float32）選択
-- 💡 **初心者に最適**: 3つのセルを順に実行するだけの簡単操作
-
-**推奨用途:** YouTubeプレイリストの全動画を一括処理したい方、複数の動画を効率的に文字起こししたい方、Gemini AIで要約も同時に行いたい方
-
-**Google Drive設定例:**
-```python
-# Google Driveのフォルダパス設定（必須）
-output_transcript_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
-output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
-```
-
-**デフォルト設定:**
-- モデル: `Zoont/faster-whisper-large-v3-turbo-int8-ct2`
-- 計算タイプ: `int8_float16`
-- VAD: 有効（200ms閾値）
-- beam_size: 5
+**音声ファイル**: MP3, WAV, M4A, FLAC, OGG, OPUS  
+**動画ファイル**: MP4, MOV, AVI, WMV, MKV, FLV, WEBM
 
 ---
 
-#### 2. [`【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb) ⭐
-**Google Driveのローカルファイル専用の高性能ノートブック**
+## 📚 利用可能なノートブック
 
-**主な特徴:**
-- 📁 **Google Drive内のファイル一括処理**: 指定フォルダ内の全ての動画・音声ファイルを自動処理
-- 💾 **Google Drive必須**: 入力ファイルはGoogle Driveに配置が必要
-- 🎬 **動画ファイル自動対応**: mp4, mov, avi, wmv, mkv, flv, webmなど動画から自動で音声抽出
-  - FFmpegで16kHz/モノラルに最適化して音声抽出
-  - 動画ファイル検出時は自動的に音声抽出モードに切り替え
-- 🎵 **音声ファイル直接対応**: wav, mp3などの音声ファイルもそのまま処理
-- 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
-  - 対応モデル: `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`
-  - カスタムプロンプトで会議録、講義、対話の要約に最適化
-- 🔧 **9種類のモデルと4種類の量子化タイプから選択可能**:
-  - モデル: Zoont/int8版、deepdml版、large-v3、large-v2、distil-large-v3、medium、small、base、tiny
-  - 計算タイプ: int8_float16、float16、int8、float32
-- ⚡ **バッチ処理最適化**: 複数ファイルを効率的に連続処理
-- 📊 **詳細なログ出力**: 処理時間、使用モデル、計算タイプを記録
-- 🎯 **VAD機能**: 無音区間を自動除去（200ms閾値、調整可能）
-- 💪 **上級者向け**: beam_size（1～10）、VAD設定など細かいパラメータ調整が可能
+このリポジトリには以下のノートブックが含まれています。用途に応じて選択してください。
 
-**推奨用途:** 既にダウンロード済みの動画・音声ファイルを大量に処理したい方、最大限のカスタマイズをしたい方、動画ファイルから直接文字起こししたい方
+### 🌟 推奨ノートブック（完成版）
 
-**Google Drive設定例:**
-```python
-# Google Driveのフォルダパス設定（必須）
-# 事前にGoogle Drive上に以下のフォルダ構造を作成してください
-drive_audio_input_dir = '/content/drive/My Drive/Whisper_Transcripts/input_audio'  #@param {type:"string"}
-drive_transcript_output_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
-drive_gemini_output_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
-```
+#### 1. **動画URLから高精度文字起こし＆Gemini処理（プレイリスト対応版）**
+   - **ファイル**: `notebooks/【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb`
+   - **用途**: YouTubeの動画やプレイリストから文字起こし + AI要約
+   - **特徴**:
+     - ✅ プレイリスト全体の一括処理
+     - ✅ Gemini APIによる自動要約・分析
+     - ✅ モデル選択可能（large-v3-turbo推奨）
+     - ✅ VADフィルタ搭載
+     - ✅ 自動クリーンアップ機能
+   - **推奨対象**: YouTube動画の文字起こし＋AI要約が必要な方
 
-**フォルダ構造:**
-```
-My Drive/
-└── Whisper_Transcripts/
-    ├── input_audio/          ← ここに動画・音声ファイルを配置
-    ├── output_transcripts/   ← 文字起こし結果が保存される
-    └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
-```
+#### 2. **高性能文字起こし実行スクリプト（モデル・量子化選択版）**
+   - **ファイル**: `notebooks/【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`
+   - **用途**: Google Driveのローカルファイル一括処理
+   - **特徴**:
+     - ✅ 動画・音声ファイル自動判別
+     - ✅ 複数ファイルの一括処理（進捗バー表示）
+     - ✅ モデル・量子化設定のカスタマイズ
+     - ✅ Gemini統合（オプション）
+     - ✅ 日本語ファイル名対応
+   - **推奨対象**: ローカルファイルを大量に処理したい方
 
-**デフォルト設定:**
-- モデル: `Zoont/faster-whisper-large-v3-turbo-int8-ct2`（推奨）
-- 計算タイプ: `int8_float16`（最速）
-- VAD: 有効（200ms閾値）
-- beam_size: 5（バランス重視）
+#### 3. **安定版：動画URLから高精度文字起こし**
+   - **ファイル**: `notebooks/【安定版】動画URLから高精度文字起こし実行スクリプト.ipynb`
+   - **用途**: シンプルなYouTube動画文字起こし
+   - **特徴**:
+     - ✅ 最小限の設定で実行
+     - ✅ 安定性重視
+     - ✅ 初心者向け
+   - **推奨対象**: 初めて使う方、シンプルな機能が欲しい方
 
----
+### 🔧 その他のノートブック
 
-### 📦 安定版ノートブック
+- **高性能文字起こし実行スクリプト_(large_v3_turbo対応版).ipynb**  
+  large-v3-turbo特化版。最新の高速モデルに最適化
 
-#### 3. [`【安定版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【安定版】動画URLから高精度文字起こし実行スクリプト.ipynb)
-**YouTube単体動画URL専用の安定版ノートブック**
+- **高性能文字起こし実行スクリプト_(動画ファイル自動対応版).ipynb**  
+  動画ファイル自動変換対応。FFmpegで自動的に音声抽出
 
-**主な特徴:**
-- 🎬 **YouTube単体動画URL専用**: 1本の動画URLから文字起こし
-- 💾 **Google Drive推奨**: 処理結果はGoogle Driveに自動保存（デフォルト）
-  ※ ローカルパスに変更可能
-- 🚀 **yt-dlp統合**: 最新のyt-dlpで安定した動画ダウンロード
-- 🤖 **Gemini AI統合**: 文字起こし結果をGemini 2.5で要約・分析（オプション）
-- 🎯 **VAD（音声区間検出）機能**: 無音区間を自動除去
-- 💡 **シンプルで安定**: プレイリスト機能を含まない安定した動作
+- **高性能・多機能_文字起こし実行スクリプト.ipynb**  
+  多機能版。高度なカスタマイズが可能
 
-**推奨用途:** 1本ずつ確実に処理したい方、安定性を最優先したい方
+- **文字起こしコード.ipynb**  
+  基本機能のみのシンプル版。学習用に最適
 
-**Google Drive設定例:**
-```python
-# Google Driveのフォルダパス設定（必須）
-output_transcript_dir = '/content/drive/My Drive/Whisper_Transcripts/output_transcripts'  #@param {type:"string"}
-output_gemini_dir = '/content/drive/My Drive/Whisper_Transcripts/gemini_outputs'  #@param {type:"string"}
-```
+### 📦 旧版ノートブック
+
+`【旧版】` フォルダには過去のバージョンが保存されています。互換性が必要な場合のみご利用ください。
 
 ---
 
-### 📦 旧版ノートブック（参考用）
+## 🚀 クイックスタート
 
-以下のノートブックは旧版または機能が限定されたバージョンです。基本的には上記の推奨版・安定版をご利用ください。
+### 必要なもの
 
-- [`【旧版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【旧版】動画URLから高精度文字起こし実行スクリプト.ipynb): 完成版のベースとなった旧バージョン（Gemini機能なし）
-- [`【旧版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【旧版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb): 完成版のベースとなった旧バージョン（Gemini機能なし）
-- [`動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/動画URLから高精度文字起こし実行スクリプト.ipynb): 初期バージョン
-- [`文字起こしコード.ipynb`](notebooks/文字起こしコード.ipynb): 基本的な文字起こしコード
-- [`高性能・多機能_文字起こし実行スクリプト.ipynb`](notebooks/高性能・多機能_文字起こし実行スクリプト.ipynb): 多機能版（旧版）
-- [`高性能文字起こし実行スクリプト_(large_v3_turbo対応版).ipynb`](notebooks/高性能文字起こし実行スクリプト_(large_v3_turbo対応版).ipynb): large-v3-turbo特化版（旧版）
-- [`高性能文字起こし実行スクリプト_(動画ファイル自動対応版).ipynb`](notebooks/高性能文字起こし実行スクリプト_(動画ファイル自動対応版).ipynb): 動画ファイル対応版（旧版）
+- Googleアカウント
+- Google Drive（結果保存用）
+- （オプション）Gemini API Key（AI要約機能を使う場合）
+  - [Google AI Studio](https://aistudio.google.com/app/apikey) で無料で取得可能
 
-## 🎯 使い方
+### 基本的な使い方（5分で開始）
 
-### クイックスタート
+#### ステップ1: ノートブックを開く
 
-#### 🎬 YouTubeプレイリスト・動画から文字起こしする場合
-**→ [`【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし＆Gemini処理実行（プレイリスト対応版）.ipynb)を使用（推奨）**
+1. このリポジトリの `notebooks` フォルダから、使いたいノートブックを選択
+2. 「Open in Colab」バッジをクリック、またはファイルをGoogle Colabにアップロード
 
-1. **ランタイムの設定**
-   - Google Colabでノートブックを開く
-   - `ランタイム` → `ランタイムのタイプを変更` → `T4 GPU`を選択
+#### ステップ2: GPU設定を確認
 
-2. **セルを上から順に実行**
-   - **セル1: 環境構築** - yt-dlp、faster-whisper、ffmpeg、Gemini APIをインストール
-   - **セル2: Google Driveへの接続（推奨）** - 結果をDriveに保存したい場合
-     ※ デフォルト設定ではGoogle Drive内に保存されます
-   - **セル3: プレイリスト/単体動画URLから高精度文字起こし＆Gemini処理実行** - 設定と実行
+Google Colabで以下の手順を実行：
 
-3. **Google Driveフォルダの準備**
-   - Google Driveで以下のフォルダを作成してください：
-   ```
-   My Drive/
-   └── Whisper_Transcripts/
-       ├── output_transcripts/   ← 文字起こし結果が保存される
-       └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
-   ```
+1. メニューから `ランタイム` → `ランタイムのタイプを変更`
+2. `ハードウェアアクセラレータ` を **T4 GPU** に設定
+3. `保存` をクリック
 
-4. **パラメータ設定例**
+> **重要**: GPUを設定しないと処理が非常に遅くなります
+
+#### ステップ3: セル1を実行（環境構築）
+
 ```python
-# 1. 動画/プレイリストのURLと出力先の設定（Google Drive必須）
-video_url = "https://www.youtube.com/playlist?list=xxxxx"  # プレイリストURL
-# または単体動画URL: video_url = "https://youtu.be/xxxxx"
-output_transcript_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
+# セル1を実行して必要なライブラリをインストール
+# ✓ GPU確認
+# ✓ faster-whisper (v1.0.3)
+# ✓ yt-dlp (YouTube動画ダウンローダー)
+# ✓ ffmpeg (音声・動画処理)
+# ✓ google-generativeai (Gemini API)
+```
 
-# 2. モデルとパフォーマンス設定
-model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"  # 推奨モデル（最速）
-compute_type = "int8_float16"  # 推奨計算タイプ
+実行時間: 約1〜2分
 
-# 3. VAD (音声区間検出) 設定
+#### ステップ4: セル2を実行（Google Drive接続）
+
+```python
+# Google Driveにマウント
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+許可を求められたら、アカウントを選択して承認します。
+
+#### ステップ5: メイン処理セルを実行
+
+各ノートブックのメイン処理セル（`@title` マーク付き）で以下を設定：
+
+**YouTube動画の場合**:
+```python
+video_url = "https://www.youtube.com/watch?v=XXXXX"  # YouTube URL
+output_transcript_dir = "/content/drive/MyDrive/Whisper_Transcripts/output"
+enable_playlist = True  # プレイリストの場合
+```
+
+**ローカルファイルの場合**:
+```python
+drive_audio_input_dir = "/content/drive/MyDrive/Whisper_Transcripts/input"
+drive_transcript_output_dir = "/content/drive/MyDrive/Whisper_Transcripts/output"
+```
+
+セルを実行すると、自動で文字起こしが開始されます！
+
+---
+
+## 🔧 技術仕様
+
+### 使用技術
+
+| 技術 | バージョン | 説明 |
+|------|------------|------|
+| **OpenAI Whisper** | - | 音声認識モデル（faster-whisper実装） |
+| **faster-whisper** | 1.0.3 | CTranslate2による高速化実装 |
+| **yt-dlp** | 最新 | YouTube動画ダウンローダー |
+| **FFmpeg** | - | 音声・動画処理ツール |
+| **Google Gemini API** | - | AI要約・分析エンジン |
+| **CUDA** | - | GPU加速（Google Colab T4） |
+
+### アーキテクチャ
+
+```
+YouTube URL / ローカルファイル
+        ↓
+    yt-dlp / FFmpeg (音声抽出)
+        ↓
+    WAV形式に変換 (16kHz, モノラル)
+        ↓
+    faster-whisper (文字起こし)
+        ↓
+    タイムスタンプ付きテキスト出力
+        ↓
+   (オプション) Gemini API (要約・分析)
+        ↓
+    最終結果をGoogle Driveに保存
+```
+
+---
+
+## 🎯 モデル選択ガイド
+
+### Whisperモデル比較表
+
+| モデル | 精度 | 速度 | メモリ | 処理時間<sup>*</sup> | 推奨用途 |
+|--------|------|------|--------|---------------------|----------|
+| **Zoont/faster-whisper-large-v3-turbo-int8-ct2** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 0.5x | **最も推奨** - バランス最良 |
+| **deepdml/faster-whisper-large-v3-turbo-ct2** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | 0.7x | 高精度・高速 |
+| **RoachLin/kotoba-whisper-v2.2-faster** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | 1.0x | **日本語特化v2.2** - 日本語最高精度 |
+| **kotoba-tech/kotoba-whisper-v2.0-faster** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | 1.0x | **日本語特化v2.0** - 日本語高精度 |
+| **large-v3** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | 1.5x | 最高精度（やや遅い） |
+| **large-v2** | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | 1.5x | 高精度（安定版） |
+| **distil-large-v3** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 0.6x | 軽量・高速バランス型 |
+| **medium** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 0.3x | 軽量タスク |
+| **small** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 0.2x | 高速処理優先 |
+| **base** | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 0.1x | 最軽量 |
+| **tiny** | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 0.05x | テスト用 |
+
+<sup>*</sup> 処理時間は音声1時間あたりの目安。0.5x = 30分で処理完了
+
+### 計算タイプ（Compute Type）
+
+| タイプ | 説明 | 推奨モデル | メモリ使用量 |
+|--------|------|------------|--------------|
+| **int8_float16** | 量子化最適化（推奨） | int8モデル全般 | 低 |
+| **float16** | 標準精度 | float16モデル全般 | 中 |
+| **int8** | 省メモリ | メモリ制約がある場合 | 最低 |
+| **float32** | 最高精度 | 精度最優先の場合 | 高 |
+
+### Geminiモデル選択ガイド
+
+以下は利用可能なGeminiモデルの一覧です：
+
+| モデル | 速度 | コンテキスト長 | コスト | 推奨用途 |
+|--------|------|----------------|--------|----------|
+| **gemini-flash-latest** | ⭐⭐⭐⭐⭐ | 標準 | 低 | **最推奨** - 常に最新のFlashモデル |
+| **gemini-3.1-pro-preview** | ⭐⭐⭐ | 超大規模 | 高 | 最高品質の分析・要約 |
+| **gemini-3.1-flash-lite-preview** | ⭐⭐⭐⭐⭐ | 標準 | 最低 | 高速・低コスト |
+| **gemini-3-flash-preview** | ⭐⭐⭐⭐ | 標準 | 低 | バランス型 |
+| **gemini-2.5-pro** | ⭐⭐⭐ | 大規模 | 高 | 高度な分析タスク |
+| **gemini-2.5-flash** | ⭐⭐⭐⭐⭐ | 標準 | 低 | 高速処理 |
+| **gemini-2.5-flash-lite** | ⭐⭐⭐⭐⭐ | 標準 | 最低 | 超高速・超低コスト |
+| **gemini-2.0-flash** | ⭐⭐⭐⭐ | 標準 | 低 | 安定版・高速 |
+| **gemini-2.0-flash-lite** | ⭐⭐⭐⭐⭐ | 標準 | 最低 | 安定版・超高速 |
+
+> **推奨**: 一般的な用途には `gemini-flash-latest` を推奨します。常に最新のFlashモデルが自動で使用されます。
+
+---
+
+## 📖 詳細設定ガイド
+
+### VAD（音声区間検出）設定
+
+VADは無音区間を自動検出・除去して、文字起こし精度を向上させます。
+
+```python
 use_vad_filter = True  # VADを有効化
-vad_min_silence_duration_ms = 200  # 無音閾値（ミリ秒）
-
-# 4. 言語設定（オプション）
-enable_language_specification = False  # 自動検出
-language_code = "ja"  # 日本語を指定する場合
-
-# 5. 高度な設定
-beam_size = 5  # バランス重視（デフォルト）
-cleanup_audio_file = True  # 処理後に音声ファイルを削除
-
-# 6. Geminiによる処理の設定（オプション）
-enable_gemini_processing = False  # Gemini機能を使う場合はTrue
-gemini_api_key = ""  # GeminiのAPIキー
-gemini_model = "gemini-2.5-flash"  # 使用するGeminiモデル
-output_gemini_dir = "/content/drive/My Drive/Whisper_Transcripts/gemini_outputs"  #@param {type:"string"}
-gemini_prompt = "以下の動画書き起こしテキストを、重要なポイントと動画の構成を含めて要約して最大コンテクストで出力してください。"
+vad_min_silence_duration_ms = 200  # 200ms以上の無音を区切りとして認識
 ```
 
-4. **実行完了後**
-   - 文字起こし結果が`.txt`ファイルとして保存されます
-   - Gemini処理を有効にした場合、要約結果も別ファイルとして保存されます
+**推奨値**:
+- 会議・講演: 200-500ms
+- 音楽・歌詞: 100-200ms
+- ポッドキャスト: 300-500ms
+- 雑音が多い環境: 100-200ms
+
+**効果**:
+- ✅ 無音部分の誤認識を防止
+- ✅ 文の区切りが自然になる
+- ✅ 処理速度が向上
+
+### 言語設定
+
+```python
+enable_language_specification = True
+language_code = "ja"  # 日本語
+```
+
+**主要言語コード**:
+- `ja`: 日本語
+- `en`: 英語
+- `zh`: 中国語（簡体字）
+- `ko`: 韓国語
+- `es`: スペイン語
+- `fr`: フランス語
+- `de`: ドイツ語
+- `it`: イタリア語
+- `pt`: ポルトガル語
+- `ru`: ロシア語
+
+[全言語コード一覧（100以上）](https://github.com/openai/whisper/blob/main/whisper/tokenizer.py)
+
+**Tips**:
+- 言語を指定すると、精度が向上します
+- 自動検出でも高精度ですが、明確な言語がある場合は指定を推奨
+
+### ビームサイズ調整
+
+```python
+beam_size = 5  # 推奨値
+```
+
+**設定の目安**:
+- **1-3**: 高速だが精度低下（テスト・確認用）
+- **5-7**: バランス（推奨）
+- **8-10**: 高精度だが処理時間増（重要な文書）
+
+**faster-whisperのデフォルト**: 5（バランスが良い）
+
+### プレイリスト処理
+
+YouTubeプレイリスト全体を一括処理できます：
+
+```python
+video_url = "https://www.youtube.com/playlist?list=XXXXX"
+enable_playlist = True  # プレイリスト全体を処理
+```
+
+個別の動画だけを処理したい場合は `enable_playlist = False` に設定します。
+
+**注意点**:
+- プレイリストの動画数が多い場合、処理時間がかかります
+- Google Colabの無料プランには時間制限があります（約12時間）
+
+### Geminiプロンプト例
+
+#### 要約
+```python
+gemini_prompt = "以下の書き起こしテキストを、主要なポイント3つに要約してください。"
+```
+
+#### 議事録作成
+```python
+gemini_prompt = "以下の会議書き起こしから、決定事項とアクションアイテムを抽出してください。"
+```
+
+#### Q&A抽出
+```python
+gemini_prompt = "以下の書き起こしから、質問と回答のペアを抽出してください。"
+```
+
+#### キーワード抽出
+```python
+gemini_prompt = "以下のテキストから重要なキーワードを10個抽出してください。"
+```
+
+#### 翻訳
+```python
+gemini_prompt = "以下の日本語テキストを英語に翻訳してください。"
+```
 
 ---
 
-#### 📁 Google Drive内のファイルから文字起こしする場合
-**→ [`【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb)を使用**
+## 🖥️ システム要件
 
-1. **ランタイムの設定**
-   - Google Colabでノートブックを開く
-   - `ランタイム` → `ランタイムのタイプを変更` → `T4 GPU`を選択
+### Google Colab環境（推奨）
 
-2. **セルを上から順に実行**
-   - **セル1: 環境構築** - faster-whisper、CUDA、Gemini APIをインストール
-   - **セル2: Google Driveへの接続（必須）** - Google Driveをマウント
-   - **セル3: 高性能文字起こし＆Gemini処理実行** - 設定と実行
+- **GPU**: T4 GPU（無料プランで利用可能）
+- **RAM**: 12GB以上推奨
+- **ストレージ**: Google Drive空き容量（出力ファイル保存用）
+- **ブラウザ**: Chrome, Firefox, Safari（最新版推奨）
 
-3. **Google Driveフォルダの準備**
-   - Google Driveで以下のフォルダ構造を事前に作成してください：
-   ```
-   My Drive/
-   └── Whisper_Transcripts/
-       ├── input_audio/          ← ここに動画・音声ファイルを配置
-       ├── output_transcripts/   ← 文字起こし結果が保存される
-       └── gemini_outputs/       ← Gemini処理結果が保存される（オプション）
-   ```
+### ローカル実行（非推奨）
 
-4. **パラメータ設定例**
-```python
-# 1. Google Driveのパス設定（必須）
-drive_audio_input_dir = "/content/drive/My Drive/Whisper_Transcripts/input_audio"  #@param {type:"string"}
-drive_transcript_output_dir = "/content/drive/My Drive/Whisper_Transcripts/output_transcripts"  #@param {type:"string"}
+ローカル環境で実行する場合:
+- **GPU**: NVIDIA GPU（CUDA対応、8GB VRAM以上）
+- **Python**: 3.8以上
+- **CUDA**: 11.x または 12.x
+- **OS**: Windows, Linux, macOS
 
-# 2. モデルとパフォーマンス設定
-model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"  # 推奨モデル（最速）
-compute_type = "int8_float16"  # int8モデルに最適
-
-# 3. VAD (音声区間検出) 設定
-use_vad_filter = True  # VADを有効化
-vad_min_silence_duration_ms = 200  # 無音閾値（ミリ秒）
-
-# 4. 言語設定（オプション）
-enable_language_specification = False  # 自動検出
-language_code = "ja"  # 日本語を指定する場合
-
-# 5. 高度な設定
-beam_size = 5  # バランスの取れた推奨値（1～10）
-
-# 6. Geminiによる処理の設定（オプション）
-enable_gemini_processing = False  # Gemini機能を使う場合はTrue
-gemini_api_key = ""  # GeminiのAPIキー
-gemini_model = "gemini-2.5-flash"  # 使用するGeminiモデル
-drive_gemini_output_dir = "/content/drive/My Drive/Whisper_Transcripts/gemini_outputs"  #@param {type:"string"}
-gemini_prompt = "以下の会議や講義、対話の書き起こしテキストを、重要なポイントや構成をまとめて要約して最大コンテクストで出力してください。"
-```
-
-5. **ファイルの準備**
-   - `input_audio`フォルダに動画・音声ファイルを配置
-   - 対応形式: **動画** (mp4, mov, avi, wmv, mkv, flv, webm) / **音声** (wav, mp3など)
-   - 動画ファイルの場合、FFmpegが自動的に音声を抽出します
-
-6. **実行完了後**
-   - `output_transcripts`フォルダに文字起こし結果が保存されます
-   - Gemini処理を有効にした場合、`gemini_outputs`フォルダに要約結果が保存されます
-   - 複数ファイルがある場合、すべて自動的に処理されます
+> **注意**: ローカル実行は環境構築が複雑なため、Google Colabの使用を強く推奨します。
 
 ---
 
-### 📤 出力形式
+## ❓ トラブルシューティング
 
-文字起こし結果は以下の形式で出力されます：
+### よくある問題と解決方法
 
-**文字起こしファイル (.txt)**
-- ファイル名: `transcript_[元ファイル名]_[モデル名]_[タイムスタンプ].txt`
-- 内容: プレーンテキスト形式の文字起こし結果
-- メタ情報: 使用モデル、計算タイプ、処理時間などが含まれます
+#### 1. GPU が認識されない
 
-**Gemini処理結果 (.txt)** ※Gemini機能を有効にした場合
-- ファイル名: `gemini_[元ファイル名]_[タイムスタンプ].txt`
-- 内容: Geminiによる要約・分析結果
-- カスタムプロンプトに応じた柔軟な出力
+**症状**: `nvidia-smi` でエラーが表示される
 
-### 🎨 モデルとパフォーマンスの選び方
+**解決方法**:
+1. `ランタイム` → `ランタイムのタイプを変更`
+2. `ハードウェアアクセラレータ` を **T4 GPU** に変更
+3. ランタイムを再起動
 
-#### モデル選択ガイド
-| モデル | 精度 | 速度 | メモリ | 推奨用途 |
-|--------|------|------|--------|----------|
-| `Zoont/faster-whisper-large-v3-turbo-int8-ct2` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | **最推奨・総合バランス最高** |
-| `deepdml/faster-whisper-large-v3-turbo-ct2` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 高精度・高速 |
-| `large-v3` | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | 最高精度 |
-| `large-v2` | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | 高精度 |
-| `distil-large-v3` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 精度と速度のバランス |
-| `medium` | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 標準 |
-| `small` | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 高速・軽量 |
-| `base` | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 最速・最軽量 |
-| `tiny` | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 超高速・超軽量 |
+#### 2. メモリ不足エラー
 
-#### 計算タイプ選択ガイド
-| 計算タイプ | 速度 | メモリ | 精度 | 推奨組み合わせ |
-|-----------|------|--------|------|----------------|
-| `int8_float16` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | **Zoont/int8モデル + int8_float16（推奨）** |
-| `float16` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | deepdmlモデル + float16 |
-| `int8` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 省メモリ重視 |
-| `float32` | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 高精度重視 |
+**症状**: `CUDA out of memory` または `RuntimeError: Out of memory`
 
-#### 推奨設定パターン
+**解決方法**:
+- 軽量モデルに変更: `distil-large-v3` または `medium`
+- 計算タイプを変更: `int8_float16`
+- ランタイムを再起動してメモリをクリア
 
-**パターン1: 総合推奨（速度・精度・メモリの最適バランス）**
+#### 3. YouTube動画のダウンロード失敗
+
+**症状**: `yt-dlp` エラー、`Unable to extract`
+
+**解決方法**:
 ```python
-model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
-compute_type = "int8_float16"
-beam_size = 5
+# セル1で最新版に更新
+!pip install -U yt-dlp
 ```
 
-**パターン2: 高精度重視**
+または、動画URLが正しいか確認してください。
+
+#### 4. Gemini APIエラー
+
+**症状**: `API Key invalid` または `403 Forbidden`
+
+**解決方法**:
+1. [Google AI Studio](https://aistudio.google.com/app/apikey) でAPIキーを取得
+2. 正しいキーをコピー＆ペースト（スペースなし）
+3. APIの利用制限・クォータを確認
+
+#### 5. 文字起こし結果が不正確
+
+**解決方法**:
+- VADを有効化: `use_vad_filter = True`
+- 言語を明示: `language_code = "ja"`
+- ビームサイズを増やす: `beam_size = 7`
+- より高精度なモデルを使用: `large-v3` または `kotoba-whisper-v2.0`（日本語）
+
+#### 6. プレイリストの一部しか処理されない
+
+**解決方法**:
 ```python
-model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
-compute_type = "int8_float16"
-beam_size = 7～10
+enable_playlist = True  # 必ず True に設定
 ```
 
-**パターン3: 高速処理重視**
-```python
-model_name = "Zoont/faster-whisper-large-v3-turbo-int8-ct2"
-compute_type = "int8_float16"
-beam_size = 3
+また、プレイリストが公開設定になっているか確認してください。
+
+#### 7. Google Driveのマウントに失敗
+
+**症状**: `Mount failed`
+
+**解決方法**:
+1. ブラウザのポップアップブロックを解除
+2. Googleアカウントの権限を許可
+3. ランタイムを再起動してやり直し
+
+#### 8. ファイル名が文字化けする
+
+**症状**: 日本語ファイル名が「？？？」になる
+
+**解決方法**:
+- 最新版のノートブックを使用（UTF-8対応済み）
+- ファイル名に特殊文字を使わない
+
+---
+
+## 📝 出力ファイル形式
+
+### 文字起こし結果（.txt）
+
+```
+元ファイル名: example_video.mp4
+処理完了日時: 2026-04-07 12:00:00 (月曜日)
+使用モデル: Zoont/faster-whisper-large-v3-turbo-int8-ct2
+計算タイプ: int8_float16
+VADフィルター: 有効
+検出言語: ja (確率: 0.99)
+
+---
+
+[0000.00s -> 0005.23s] こんにちは、今日はプロジェクトの進捗について説明します。
+[0005.45s -> 0012.67s] 現在、フェーズ2が完了し、フェーズ3に移行する準備が整いました。
+[0013.12s -> 0019.34s] 次回のミーティングは来週月曜日の午後2時です。
 ```
 
-### 🤖 Gemini AI統合の活用方法
+タイムスタンプ付きで、読みやすい形式で保存されます。
 
-完成版の両ノートブックには、Gemini 2.5 AIによる自動要約・分析機能が統合されています。
+### Gemini処理結果（.txt）
 
-#### 対応Geminiモデル
-- `gemini-2.5-pro`: 最高品質の要約・分析（処理時間長め）
-- `gemini-2.5-flash`: 高速で高品質（推奨）
-- `gemini-2.5-flash-lite`: 超高速・軽量版
+```
+■ 元ファイル名: example_video.mp4
+■ 処理実行日時: 2026-04-07 12:05:00 (月曜日)
+■ 使用モデル: gemini-flash-latest
 
-#### カスタムプロンプト例
+---
 
-**会議録の要約**
-```python
-gemini_prompt = "以下の会議の書き起こしから、決定事項、アクションアイテム、議論のポイントを箇条書きで抽出してください。"
+【要約】
+
+本動画では、プロジェクトの進捗について以下の3点が報告されています。
+
+1. **フェーズ2の完了**: 計画通りにフェーズ2の全タスクが完了し、成果物が納品されました。
+2. **フェーズ3への移行**: フェーズ3の準備が整い、来週から本格的に開始予定です。
+3. **次回ミーティング**: 来週月曜日14時に進捗確認ミーティングを実施します。
 ```
 
-**講義・プレゼンの要約**
-```python
-gemini_prompt = "以下の講義内容を、章立てして要約してください。各章で重要なキーワードも抽出してください。"
-```
+---
 
-**動画コンテンツの構成分析**
-```python
-gemini_prompt = "以下の動画の書き起こしから、動画の構成（イントロ、本編、まとめ）を分析し、各セクションの要点をまとめてください。"
-```
+## 🤝 貢献
 
-**多言語対応の要約**
-```python
-gemini_prompt = "以下の英語の書き起こしを日本語で要約し、重要なポイントを5つに絞って箇条書きで出力してください。"
-```
+バグ報告、機能リクエスト、プルリクエストを歓迎します！
 
-#### Gemini機能の有効化手順
-1. [Google AI Studio](https://makersuite.google.com/app/apikey)でAPIキーを取得
-2. ノートブックの設定で`enable_gemini_processing = True`に変更
-3. `gemini_api_key`にAPIキーを入力
-4. `gemini_model`と`gemini_prompt`を用途に合わせて設定
-5. 実行すると、文字起こし結果とGemini処理結果の両方が保存されます
+### 貢献方法
 
-## 🔧 必要環境
+1. このリポジトリをフォーク
+2. 機能ブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. プルリクエストを作成
 
-- **Google Colab**（無料版で動作）
-- **GPU**: T4推奨（無料枠で利用可能）
-- **インターネット接続**: モデルのダウンロードとYouTube動画取得に必要
-- **Google Drive**: ローカルファイル版を使用する場合（推奨）
-- **Gemini APIキー**: Gemini機能を使用する場合（オプション）
+### バグ報告
 
-## 📦 使用ライブラリ
+問題が発生した場合は、以下の情報を含めて報告してください：
 
-- [OpenAI Whisper](https://github.com/openai/whisper): 音声認識モデル
-- [faster-whisper](https://github.com/guillaumekln/faster-whisper): CTranslate2ベースの高速化版Whisper実装
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp): YouTube動画ダウンロード（YouTube版ノートブック）
-- [FFmpeg](https://ffmpeg.org/): 動画から音声抽出、音声ファイル前処理
-- [Google Generative AI](https://ai.google.dev/): Gemini API統合（オプション）
-- [tqdm](https://github.com/tqdm/tqdm): プログレスバー表示
+- エラーメッセージの全文
+- 使用したノートブック名
+- 実行環境（Google Colab / ローカル）
+- 再現手順
 
-## 💡 よくある質問（FAQ）
-
-### Q1: どのノートブックを使えばいいですか？
-**A:** 用途によって選んでください：
-- **YouTube動画から文字起こし** → [`【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb`](notebooks/【完成版】動画URLから高精度文字起こし実行スクリプト.ipynb)
-- **Google Driveのファイルから文字起こし** → [`【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb)
-
-### Q2: 動画ファイルから直接文字起こしできますか？
-**A:** はい、可能です。[`【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb`](notebooks/【完成版】高性能文字起こし実行スクリプト_(モデル・量子化_選択肢追加版).ipynb)は、mp4, mov, avi, wmv, mkv, flv, webm形式の動画から自動的に音声を抽出します。
-
-### Q3: 無料版のGoogle Colabで使えますか？
-**A:** はい、完全に無料版で動作します。T4 GPUを使用することで、高速に文字起こしができます。
-
-### Q4: 処理時間はどのくらいかかりますか？
-**A:** 
-- **推奨設定**（Zoont/int8モデル + int8_float16）: 10分の動画 → 約2～3分
-- 実際の処理時間は、動画の長さ、音質、GPU使用状況によって変動します。
-
-### Q5: Gemini機能は必須ですか？
-**A:** いいえ、オプションです。`enable_gemini_processing = False`（デフォルト）で、従来通りの文字起こしのみ実行されます。要約や分析が必要な場合のみ有効にしてください。
-
-### Q6: エラーが出た場合は？
-**A:** 
-1. ランタイムタイプがGPU（T4）になっているか確認
-2. Google Driveが正しくマウントされているか確認（ローカルファイル版）
-3. ファイルパスが正しいか確認
-4. 使用制限に達していないか確認（無料版の場合）
-
-### Q7: 複数の動画を一度に処理できますか？
-**A:** 
-- **YouTubeプレイリスト版（完成版）**: プレイリストURLで全動画を一括自動処理可能
-- **YouTube単体動画版（安定版）**: 1本ずつ処理
-- **ローカルファイル版**: input_audioフォルダ内の全ファイルを自動的に一括処理
-
-### Q8: 対応言語は？
-**A:** Whisperがサポートする全ての言語（99言語以上）に対応しています。`language_code`で言語を指定することも、自動検出させることもできます。
-
-## ⚠️ 注意事項
-
-- Google Colabの無料版には**使用制限**があります（連続使用時間、1日の使用量など）
-- 長時間の動画処理には時間がかかる場合があります
-- YouTubeの**利用規約**を遵守してください
-- **著作権**に配慮した利用をお願いします
-- 動画のダウンロードは私的利用の範囲内で行ってください
-- Gemini APIには**使用制限とコスト**があります（無料枠あり）
-
-## 🚀 今後の予定
-
-- [x] ~~プレイリスト一括処理機能の追加（YouTube版）~~ ✅ 完成版で実装済み
-- [x] ~~タイムスタンプ付き文字起こし~~ ✅ `[00:00.00s -> 00:05.23s]` 形式で実装済み
-- [x] ~~より多くのGeminiモデル対応~~ ✅ gemini-2.5-pro/flash/flash-lite 実装済み
-- [ ] 字幕ファイル（SRT/VTT）形式での出力対応
-- [ ] 話者分離機能（diarization）
-- [ ] バッチ処理の進捗表示改善（プレイリスト版への tqdm 統合）
-
-## 🤝 コントリビューション
-
-バグ報告や機能追加の提案は、[Issues](https://github.com/Taichi2005/GoogleColab_Whisper/issues)からお願いします。
+---
 
 ## 📄 ライセンス
 
-このプロジェクトは[MITライセンス](LICENSE)の下で公開されています。
-
-## 📚 参考資料
-
-- [OpenAI Whisper 公式リポジトリ](https://github.com/openai/whisper)
-- [faster-whisper 公式ドキュメント](https://github.com/guillaumekln/faster-whisper)
-- [Google Gemini API ドキュメント](https://ai.google.dev/)
-- [使い方の詳細ガイド](USAGE.md)
-
-## 👤 作成者
-
-**Taichi2005**
-
-## 🌟 サポート
-
-このプロジェクトが役に立ったら、ぜひ**Star⭐**をお願いします！
+このプロジェクトはMITライセンスの下で公開されています。  
+詳細は [LICENSE](LICENSE) ファイルをご確認ください。
 
 ---
 
-**最終更新**: 2025年10月（プレイリスト対応完成版リリース）
+## 🙏 謝辞
+
+- [OpenAI Whisper](https://github.com/openai/whisper) - 音声認識モデル
+- [faster-whisper](https://github.com/guillaumekln/faster-whisper) - 高速化実装
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) - YouTubeダウンローダー
+- [Google Gemini](https://ai.google.dev/) - AI要約エンジン
+- [Google Colab](https://colab.research.google.com/) - 無料GPU環境
+- [CTranslate2](https://github.com/OpenNMT/CTranslate2) - 高速推論エンジン
+
+---
+
+## 📞 サポート
+
+問題が発生した場合:
+1. [Issues](https://github.com/Taichi2005/GoogleColab_Whisper/issues) で既存の問題を検索
+2. 新しい問題を報告する際は、エラーメッセージと実行環境を記載してください
+3. [USAGE.md](USAGE.md) で詳細な使い方を確認
+
+---
+
+## 📊 統計情報
+
+- **対応言語**: 100以上
+- **対応フォーマット**: 13種類（音声6種 + 動画7種）
+- **処理速度**: リアルタイムの2-3倍（large-v3-turbo-int8使用時）
+- **精度**: WER（単語誤り率）< 5%（日本語標準音声）、< 2.5%（kotoba-whisper-v2.2使用時）
+- **Whisperモデル**: 11種類以上（日本語特化モデル2種含む）
+- **Geminiモデル**: 9種類
+
+---
+
+## 🔄 更新履歴
+
+### 主な更新内容
+
+- ✅ faster-whisper v1.0.3対応
+- ✅ Gemini API統合（9モデル対応）
+- ✅ プレイリスト一括処理
+- ✅ VADフィルタ最適化
+- ✅ 日本語特化モデル（kotoba-whisper）追加
+- ✅ エラーハンドリング改善
+- ✅ 自動クリーンアップ機能
+
+最新の変更については、[Commits](https://github.com/Taichi2005/GoogleColab_Whisper/commits) をご確認ください。
+
+---
+
+## ⭐ スター
+
+このプロジェクトが役立った場合は、ぜひスターを付けてください！
+
+[![GitHub stars](https://img.shields.io/github/stars/Taichi2005/GoogleColab_Whisper.svg?style=social&label=Star&maxAge=2592000)](https://github.com/Taichi2005/GoogleColab_Whisper/stargazers)
+
+---
+
+## 🎓 関連リソース
+
+- [USAGE.md](USAGE.md) - 詳細な使い方ガイド
+- [OpenAI Whisper公式ドキュメント](https://github.com/openai/whisper)
+- [faster-whisperドキュメント](https://github.com/guillaumekln/faster-whisper)
+- [Google Gemini APIドキュメント](https://ai.google.dev/docs)
+
+---
+
+**Made with ❤️ by [Taichi2005](https://github.com/Taichi2005)**
